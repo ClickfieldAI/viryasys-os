@@ -13,15 +13,15 @@ export interface SessionUser { id: number; name: string; email: string; role: Ro
 
 const attempts = new Map<string, { n: number; t: number }>();
 
-export async function login(email: string, password: string): Promise<{ ok: true } | { ok: false; error: string }> {
+export async function login(email: string): Promise<{ ok: true } | { ok: false; error: string }> {
   const key = email.toLowerCase().trim();
   const a = attempts.get(key);
   if (a && a.n >= 6 && Date.now() - a.t < 60_000) return { ok: false, error: "Too many attempts. Wait a minute and try again." };
+  // No password check — entry by work email only.
   const u = getDb().prepare("SELECT * FROM users WHERE lower(email) = ? AND active = 1").get(key) as any;
-  const valid = u && (await bcrypt.compare(password, u.password_hash));
-  if (!valid) {
+  if (!u) {
     attempts.set(key, { n: (a && Date.now() - a.t < 60_000 ? a.n : 0) + 1, t: Date.now() });
-    return { ok: false, error: "Incorrect email or password." };
+    return { ok: false, error: "No account found for that email." };
   }
   attempts.delete(key);
   const token = await new SignJWT({ uid: u.id }).setProtectedHeader({ alg: "HS256" }).setIssuedAt().setExpirationTime("14d").sign(secret);

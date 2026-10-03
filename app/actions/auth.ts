@@ -4,7 +4,7 @@ import { act, req, s, type ActionResult } from "@/lib/action-utils";
 
 export async function loginAction(fd: FormData): Promise<ActionResult> {
   try {
-    const r = await login(req(fd, "email", "email"), req(fd, "password", "password"));
+    const r = await login(req(fd, "email", "email"));
     return r.ok ? { ok: true, redirect: "/" } : { ok: false, error: r.error };
   } catch (e: any) { return { ok: false, error: e.message }; }
 }
