@@ -1,0 +1,34 @@
+{
+  "name": "viryasys-os",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 4470",
+    "build": "next build",
+    "start": "next start -p 4470",
+    "typecheck": "tsc --noEmit",
+    "reseed": "rm -f data/vos.db* && echo reseeded"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^13.0.3",
+    "docx": "^9.7.2",
+    "image-size": "^2.0.4",
+    "jose": "^6.2.8",
+    "next": "16.3.0",
+    "nodemailer": "^10.0.10",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^20",
+    "@types/nodemailer": "^8.0.2",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  }
+}
