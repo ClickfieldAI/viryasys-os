@@ -32,7 +32,7 @@ export default async function LoginPage() {
         <div className="w-full max-w-[380px]">
           <h2 className="text-2xl font-extrabold tracking-tight">Sign in</h2>
           <p className="mb-6 mt-1 text-[13px] text-muted">Use your ViryaSys work account.</p>
-          <LoginForm showDemo={process.env.NODE_ENV !== "production"} />
+          <LoginForm showDemo />
         </div>
       </div>
     </div>

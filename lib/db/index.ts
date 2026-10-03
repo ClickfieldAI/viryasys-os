@@ -9,7 +9,10 @@ export type DB = Database.Database;
 
 export function getDb(): DB {
   if (g.__vos) return g.__vos;
-  const dir = path.join(process.cwd(), "data");
+  // Vercel's serverless filesystem is read-only except /tmp — and /tmp is wiped between cold
+  // starts, so this is demo-only persistence there, not real storage. A real deployment needs
+  // a hosted database (Postgres/Supabase etc.), not a local SQLite file.
+  const dir = process.env.VERCEL ? path.join("/tmp", "viryasys-data") : path.join(process.cwd(), "data");
   fs.mkdirSync(dir, { recursive: true });
   const db = new Database(path.join(dir, "vos.db"));
   db.pragma("journal_mode = WAL");

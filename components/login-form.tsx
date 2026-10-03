@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import { ActionForm } from "./client";
+import { useRouter } from "next/navigation";
+import { ActionForm, useToast } from "./client";
 import { loginAction } from "@/app/actions/auth";
 
 const DEMO = [
@@ -10,6 +11,16 @@ const DEMO = [
 
 export function LoginForm({ showDemo }: { showDemo: boolean }) {
   const [email, setEmail] = useState("");
+  const [busy, setBusy] = useState("");
+  const router = useRouter();
+  const toast = useToast();
+
+  const enterAs = async (addr: string) => {
+    setBusy(addr);
+    const fd = new FormData(); fd.set("email", addr);
+    try { const r = await loginAction(fd); if (r.ok) { router.push(r.redirect ?? "/"); router.refresh(); } else toast(r.error ?? "Could not sign in", "error"); } finally { setBusy(""); }
+  };
+
   return (
     <div>
       <ActionForm action={loginAction} className="space-y-4" resetOnSuccess={false}>
@@ -18,9 +29,9 @@ export function LoginForm({ showDemo }: { showDemo: boolean }) {
       </ActionForm>
       {showDemo && (
         <div className="mt-7 rounded-lg border border-dashed border-[var(--line-strong)] p-3">
-          <div className="eyebrow mb-2">Demo accounts</div>
+          <div className="eyebrow mb-2">Jump straight in — demo accounts</div>
           <div className="flex flex-wrap gap-1.5">
-            {DEMO.map(([l, e]) => <button key={e} type="button" className="btn btn-sm" onClick={() => setEmail(e)}>{l}</button>)}
+            {DEMO.map(([l, e]) => <button key={e} type="button" disabled={!!busy} className="btn btn-sm" onClick={() => enterAs(e)}>{busy === e ? "…" : l}</button>)}
           </div>
         </div>
       )}

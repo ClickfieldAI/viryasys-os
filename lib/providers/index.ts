@@ -132,7 +132,7 @@ export interface StorageProvider {
   put(folder: string, filename: string, data: Buffer): Promise<string>;
   get(relPath: string): Promise<Buffer | null>;
 }
-const UPLOAD_ROOT = () => path.join(process.cwd(), "data", "uploads");
+const UPLOAD_ROOT = () => (process.env.VERCEL ? path.join("/tmp", "viryasys-data", "uploads") : path.join(process.cwd(), "data", "uploads"));
 export const LocalStorage: StorageProvider = {
   async put(folder, filename, data) {
     const safe = filename.replace(/[^\w.\-]+/g, "_");
